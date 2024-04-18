@@ -23,7 +23,6 @@ class MyListData : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
     private var dataTeman = ArrayList<data_teman>()
     private var auth: FirebaseAuth? = null
-
     private lateinit var binding: ActivityMyListDataBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +45,7 @@ class MyListData : AppCompatActivity() {
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if (dataSnapshot.exists()) {
+                        dataTeman.clear()
                         for (snapshot in dataSnapshot.children) {
                             val teman = snapshot.getValue(data_teman::class.java)
                             teman?.key = snapshot.key
@@ -55,8 +55,7 @@ class MyListData : AppCompatActivity() {
                         adapter = RecyclerViewAdapter(dataTeman, this@MyListData)
                         recyclerView?.adapter = adapter
                         (adapter as RecyclerViewAdapter).notifyDataSetChanged()
-                        Toast.makeText(applicationContext, "Data Berhasil Dimuat", Toast.LENGTH_LONG)
-                            .show()
+                        Toast.makeText(applicationContext, "Data Berhasil Dimuat", Toast.LENGTH_LONG).show()
                     }
                 }
 

@@ -37,8 +37,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         return TextUtils.isEmpty(s)
     }
 
-    override fun onClick(p0: View?) {
-        when (p0?.getId()) {
+    override fun onClick(view: View?) {
+        when (view?.getId()) {
             R.id.save -> {
                 val getUserID = auth!!.currentUser!!.uid
 
@@ -63,25 +63,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             binding.nama.setText("")
                             binding.alamat.setText("")
                             binding.noHp.setText("")
-                            Toast.makeText(this@MainActivity, "Data Tersimpan",
-                            Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivity, "Data Tersimpan", Toast.LENGTH_SHORT).show()
                         }
                 }
             }
             R.id.logout -> {
-                AuthUI.getInstance().signOut(this)
-                    .addOnCompleteListener(object : OnCompleteListener<Void> {
-                        override fun onComplete(p0: Task<Void>) {
-                            Toast.makeText(this@MainActivity, "Logout Berhasil",Toast.LENGTH_SHORT).show()
-                            intent = Intent(applicationContext, LoginActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        }
-                    })
-            }
-            R.id.show_data-> {
-                startActivity(Intent(this@MainActivity, MyListData::class.java))
-            }
+            AuthUI.getInstance().signOut(this)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this@MainActivity, "Logout Berhasil", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(applicationContext, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this@MainActivity, "Gagal melakukan logout", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+        R.id.show_data -> {
+            startActivity(Intent(this@MainActivity, MyListData::class.java))
         }
     }
+}
+
 }
